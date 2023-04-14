@@ -73,6 +73,8 @@ def gen_type_defs(tree, out):
     ctx = uccontext.PhaseContext(3, out=out, indent='  ')
     ctx.print('// Full type definitions\n', indent=True)
     # add your code here
+    tree.gen_type_defs(ctx)
+    ctx.print('\n', indent=True)
 
 def gen_function_defs(tree, out):
     """Generate full function definitions, writing them to out."""

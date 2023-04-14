@@ -466,33 +466,47 @@ class StructDeclNode(DeclNode):
     def gen_type_defs(self, ctx):
         """Generate the full type definition for this user-defined type."""
         typedef = f"UC_TYPEDEF({self.name.raw})"
-        typevars = [f"{vardecl.vartype.type.mangle()} {vardecl.name.raw}" for vardecl in self.vardecls]
+        typevars = [f"{vardecl.vartype.type.mangle()} UC_VAR({vardecl.name.raw})" for vardecl in self.vardecls]
+        init_list = ', '.join([f'UC_VAR({vardecl.name.raw})(UC_VAR({vardecl.name.raw}))' for vardecl in self.vardecls])
+        comparisons = [f'this->UC_VAR({vardecl.name.raw}) == rhs.UC_VAR({vardecl.name.raw})' for vardecl in self.vardecls]
 
         # Open struct definition:
-        ctx.print(f'struct {typedef} {{', indent=True)
-        ctx.indent += 2
+        ctx.print(f'struct {typedef} ')
+        ctx.indent = "\t"
+        ctx.print('{', indent=False)
 
-        # Custom Constructor:
-        init_list = ', '.join([f'UC_VAR({vardecl.name.raw})({vardecl.name.raw})' for vardecl in self.vardecls])
-        ctx.print(f'{typedef}({", ".join(typevars)}) : {init_list} {{}}')
+        # Member Variables:
+        for typevar in typevars:
+            ctx.print(f'{typevar};', indent=True)
+            ctx.print(f'\n', indent=True)
 
         # Default Constructor:
-        init_list = ', '.join([f'UC_VAR({vardecl.name.raw})()' for vardecl in self.vardecls])
-        ctx.print(f'{typedef}() : {init_list} {{}}')
+        ctx.print(f'{typedef}() = default;', indent=True)
+        ctx.print(f'\n', indent=True)
+
+        # Custom Constructor:
+        if len(typevars) > 0:
+            ctx.print(f'{typedef}({", ".join(typevars)}) : {init_list} {{}}')
 
         # Equality Operator:
-        ctx.print(f'bool operator==(const {typedef} &rhs) const;', indent=True)
-        
+        ctx.print(f'bool operator==(const {typedef} &rhs) const', indent=True)
+        ctx.print('{', indent=True)
+        if len(typevars) > 0:  
+            ctx.print(f'return {" && ".join(comparisons)};', indent=True)
+        else:
+            ctx.print(f'return true;', indent=True) 
+        ctx.print('}', indent=True)
+
         # Inequality Operator:
-        ctx.print(f'bool operator!=(const {typedef} &rhs) const;', indent=True)
+        ctx.print(f'bool operator!=(const {typedef} &rhs) const', indent=True)
+        ctx.print('{', indent=True)
+        ctx.print(f'return !((*this)==(rhs));', indent=True)   
+        ctx.print('}', indent=True)
         
         # Close struct definition:
-        ctx.indent -= 2
-        ctx.print('};', indent=True)
+        ctx.print('};', indent=False)
         # Recursive call:
         super().gen_type_defs(ctx)
-
-
 
 @dataclass
 class FunctionDeclNode(DeclNode):
