@@ -59,6 +59,9 @@ class IntegerNode(LiteralNode):
     """An AST node representing an integer (int or long) literal."""
 
     # add your code below
+    def gen_function_defs(self, ctx):
+        """Generate function definitions for the statements in this block."""
+        ctx.print(f'{self.text}', indent=False, end='')
 
 
 @dataclass
@@ -307,7 +310,9 @@ class BinaryCompNode(BinaryOpNode):
     """A base AST node representing binary comparison operation."""
 
     # add your code below if necessary
-
+    def gen_function_defs(self, ctx):
+        ctx.print(
+        f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}', indent=False, end='')
 
 @dataclass
 class EqualityTestNode(BinaryOpNode):
@@ -453,7 +458,8 @@ class AssignNode(BinaryOpNode):
     op_name: str = '='
 
     # add your code below
-
+    def gen_function_defs(self, ctx):
+        ctx.print(f'{self.left.gen_function_defs(ctx)} {self.op_name} {self.right.gen_function_defs(ctx)}', indent=True)
 
 @dataclass
 class PushNode(BinaryOpNode):

@@ -2,12 +2,12 @@
 
   struct UC_TYPEDEF(foo);
   struct UC_TYPEDEF(bar);
-  
+
 
   // Forward function declarations
 
   UC_PRIMITIVE(void) UC_FUNCTION(main)(UC_ARRAY(UC_PRIMITIVE(string)) UC_VAR(args));
-  
+
 
   // Full type definitions
 
@@ -43,5 +43,5 @@ struct UC_TYPEDEF(bar)
 	return !((*this)==(rhs));
 	}
 };
-	
+
 

@@ -317,6 +317,10 @@ class ASTNode:
         """Generate type definitions for the types in this AST node."""
         ast_map(lambda n: n.gen_type_defs(ctx), self.children)
 
+    def gen_function_defs(self, ctx):
+        """Generate function definitions for the functions in this AST node."""
+        ast_map(lambda n: n.gen_function_defs(ctx), self.children)
+
 
 ##############
 # Start Node #

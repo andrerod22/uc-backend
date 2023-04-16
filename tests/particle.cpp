@@ -1,7 +1,7 @@
   // Forward type declarations
 
   struct UC_TYPEDEF(particle);
-  
+
 
   // Forward function declarations
 
@@ -24,7 +24,7 @@
   UC_ARRAY(UC_REFERENCE(particle)) UC_FUNCTION(make_particles)(UC_PRIMITIVE(int) UC_VAR(num_particles));
   UC_PRIMITIVE(void) UC_FUNCTION(simulate)(UC_PRIMITIVE(int) UC_VAR(num_steps));
   UC_PRIMITIVE(void) UC_FUNCTION(main)(UC_ARRAY(UC_PRIMITIVE(string)) UC_VAR(args));
-  
+
 
   // Full type definitions
 
@@ -64,5 +64,5 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	return !((*this)==(rhs));
 	}
 };
-	
+
 

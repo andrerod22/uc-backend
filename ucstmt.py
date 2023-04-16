@@ -20,6 +20,10 @@ class StatementNode(ASTNode):
     """The base class for all statement nodes."""
 
     # add your code below if necessary
+    def gen_function_defs(self, ctx):
+        """Default implementation for generating function definitions in statement nodes."""
+        # Check later (ASK Piazza)
+        super().gen_function_defs(ctx)
 
 
 @dataclass
@@ -32,6 +36,11 @@ class BlockNode(ASTNode):
     statements: List[StatementNode]
 
     # add your code below if necessary
+    def gen_function_defs(self, ctx):
+        """Generate function definitions for the statements in this block."""
+        for statement in self.statements:
+            statement.gen_function_defs(ctx)
+
 
 
 @dataclass
@@ -47,6 +56,22 @@ class IfNode(StatementNode):
     else_block: BlockNode
 
     # add your code below
+    # if (test) { then_block } else { else_block }
+    # Note: else block is optional --> check if else_block is None
+    def gen_function_defs(self, ctx):
+        ctx.indent = '\t'
+        ctx.print(f'if ({self.test.gen_function_defs(ctx)}) ', indent=True)
+        ctx.print('{', indent=True)
+        ctx.print(f'{self.then_block.gen_function_defs(ctx)}', indent=True)
+        ctx.print('}', indent=True)
+
+        if self.else_block:
+            ctx.print(f'else ', indent=True)
+            ctx.print('{', indent=True)
+            ctx.print(f'{self.else_block.gen_function_defs(ctx)}', indent=True)
+            ctx.print('}', indent=True)
+        # Check later (ASK Piazza)
+        # super().gen_function_defs(ctx)
 
 
 @dataclass
@@ -60,6 +85,15 @@ class WhileNode(StatementNode):
     body: BlockNode
 
     # add your code below
+    # while (test) { body }
+    def gen_function_defs(self, ctx):
+        ctx.indent = '\t'
+        ctx.print(f'while ({self.test.gen_function_defs(ctx)}) ', indent=True)
+        ctx.print('{', indent=True)
+        ctx.print(f'{self.body.gen_function_defs(ctx)}', indent=True)
+        ctx.print('}', indent=True)
+        # Check later (ASK Piazza)
+        # super().gen_function_defs(ctx)
 
 
 @dataclass
@@ -78,6 +112,25 @@ class ForNode(StatementNode):
     body: BlockNode
 
     # add your code below
+    # for (init; test; update) { body }
+    # Note: init, test, and update are optional --> check if they are None
+    def gen_function_defs(self, ctx):
+        ctx.indent = '\t'
+        ctx.print('for (', indent=True)
+        if self.init:
+            ctx.print(f'{self.init.gen_function_defs(ctx)}', indent=True)
+        ctx.print('; ')
+        if self.test:
+            ctx.print(f'{self.test.gen_function_defs(ctx)}', indent=True)
+        ctx.print('; ')
+        if self.update:
+            ctx.print(f'{self.update.gen_function_defs(ctx)}', indent=True)
+        ctx.print(') ', indent=True)
+        ctx.print('{', indent=True)
+        ctx.print(f'{self.body.gen_function_defs(ctx)}', indent=True)
+        ctx.print('}', indent=True)
+        # Check later (ASK Piazza)
+        # super().gen_function_defs(ctx)
 
 
 @dataclass
@@ -85,13 +138,18 @@ class BreakNode(StatementNode):
     """An AST node representing a break statement."""
 
     # add your code below
-
+    def gen_function_defs(self, ctx):
+        ctx.indent = '\t'
+        ctx.print('break;', indent=True)
 
 @dataclass
 class ContinueNode(StatementNode):
     """An AST node representing a continue statement."""
 
     # add your code below
+    def gen_function_defs(self, ctx):
+        ctx.indent = '\t'
+        ctx.print('continue;', indent=True)
 
 
 @dataclass
@@ -104,7 +162,12 @@ class ReturnNode(StatementNode):
     expr: Optional[ExpressionNode]
 
     # add your code below
-
+    def gen_function_defs(self, ctx):
+        ctx.indent = '\t'
+        ctx.print('return ', indent=True)
+        if self.expr:
+            ctx.print(f'{self.expr.gen_function_defs(ctx)}', indent=True)
+        ctx.print(';', indent=True)
 
 @dataclass
 class ExpressionStatementNode(StatementNode):
@@ -116,3 +179,8 @@ class ExpressionStatementNode(StatementNode):
     expr: ExpressionNode
 
     # add your code below if necessary
+    def gen_function_defs(self, ctx):
+        ctx.indent = '\t'
+        if self.expr:
+            ctx.print(f'{self.expr.gen_function_defs(ctx)}', indent=True)
+            ctx.print(';', indent=True)

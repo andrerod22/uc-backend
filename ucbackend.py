@@ -58,7 +58,7 @@ def gen_type_decls(tree, out):
     ctx.print('// Forward type declarations\n', indent=True)
     # add your code here
     tree.gen_type_decls(ctx)
-    ctx.print('\n', indent=True)
+    ctx.print('\n', indent=False)
 
 def gen_function_decls(tree, out):
     """Generate forward function declarations, writing them to out."""
@@ -66,7 +66,7 @@ def gen_function_decls(tree, out):
     ctx.print('// Forward function declarations\n', indent=True)
     # add your code here
     tree.gen_function_decls(ctx)
-    ctx.print('\n', indent=True)
+    ctx.print('\n', indent=False)
 
 def gen_type_defs(tree, out):
     """Generate full type definitions, writing them to out."""
@@ -74,10 +74,12 @@ def gen_type_defs(tree, out):
     ctx.print('// Full type definitions\n', indent=True)
     # add your code here
     tree.gen_type_defs(ctx)
-    ctx.print('\n', indent=True)
+    ctx.print('\n', indent=False)
 
 def gen_function_defs(tree, out):
     """Generate full function definitions, writing them to out."""
     ctx = uccontext.PhaseContext(4, out=out, indent='  ')
     ctx.print('// Full function definitions\n', indent=True)
     # add your code here
+    tree.gen_function_defs(ctx)
+    ctx.print('\n', indent=False)
