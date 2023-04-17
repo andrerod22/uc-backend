@@ -85,6 +85,10 @@ class StringNode(LiteralNode):
     # add your code below
     # def gen_function_defs(self, ctx):
         # return f'"{escaped_value}"s'
+    # add your code below
+    def gen_function_defs(self, ctx):
+        escaped_value = self.text[1:-1].replace('"', r'\"') # Escapes any extra double quotes
+        return f'"{escaped_value}"s' # wraps the string in a std::string object via s
 
 @dataclass
 class BooleanNode(LiteralNode):

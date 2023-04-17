@@ -206,9 +206,9 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	++UC_VAR(i)
 	) 
 	{
-	UC_FUNCTION(println)(uc::uc_add(uc::uc_add(uc::uc_add(uc::uc_add(uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(id), ": "), uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(x)), ", "), uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(y)));
+	UC_FUNCTION(println)(uc::uc_add(uc::uc_add(uc::uc_add(uc::uc_add(uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(id), ": "s), uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(x)), ", "s), uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(y)));
 	}
-	UC_FUNCTION(println)("");
+	UC_FUNCTION(println)(""s);
 }
 	UC_ARRAY(UC_REFERENCE(particle)) UC_FUNCTION(make_particles)(UC_PRIMITIVE(int) UC_VAR(num_particles))
 {
@@ -242,7 +242,7 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	UC_PRIMITIVE(int) UC_VAR(i);
 	UC_PRIMITIVE(int) UC_VAR(j);
 	UC_VAR(particles) = UC_FUNCTION(make_particles)(UC_FUNCTION(num_particles)());
-	UC_FUNCTION(println)("Initial");
+	UC_FUNCTION(println)("Initial"s);
 	UC_FUNCTION(print_particle_positions)(UC_VAR(particles));
 	for (
 	UC_VAR(step) = 0
@@ -252,7 +252,7 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	++UC_VAR(step)
 	) 
 	{
-	UC_FUNCTION(println)(uc::uc_add("Step ", uc::uc_add(UC_VAR(step), 1)));
+	UC_FUNCTION(println)(uc::uc_add("Step "s, uc::uc_add(UC_VAR(step), 1)));
 	for (
 	UC_VAR(i) = 0
 ; 

@@ -23,12 +23,12 @@ namespace uc {
 
   UC_PRIMITIVE(void) UC_FUNCTION(main)(UC_ARRAY(UC_PRIMITIVE(string)) UC_VAR(args))
 {
-	UC_FUNCTION(println)(uc::uc_add("", false));
-	UC_FUNCTION(println)(uc::uc_add("", true));
-	UC_FUNCTION(println)(uc::uc_add("", "hello"));
-	UC_FUNCTION(println)(uc::uc_add("", 3));
-	UC_FUNCTION(println)(uc::uc_add("", 31415926535L));
-	UC_FUNCTION(println)(uc::uc_add("", 3.0));
+	UC_FUNCTION(println)(uc::uc_add(""s, false));
+	UC_FUNCTION(println)(uc::uc_add(""s, true));
+	UC_FUNCTION(println)(uc::uc_add(""s, "hello"s));
+	UC_FUNCTION(println)(uc::uc_add(""s, 3));
+	UC_FUNCTION(println)(uc::uc_add(""s, 31415926535L));
+	UC_FUNCTION(println)(uc::uc_add(""s, 3.0));
 }
 
 

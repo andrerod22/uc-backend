@@ -47,10 +47,10 @@ UC_TYPEDEF(foo)(UC_PRIMITIVE(int) UC_VAR(x), UC_PRIMITIVE(string) UC_VAR(length)
   UC_PRIMITIVE(void) UC_FUNCTION(main)(UC_ARRAY(UC_PRIMITIVE(string)) UC_VAR(args))
 {
   UC_REFERENCE(foo) UC_VAR(f);
-	UC_FUNCTION(println)(uc::uc_add("", uc::uc_length_field(UC_VAR(args))));
-	UC_VAR(f) = uc::uc_construct<UC_REFERENCE(foo)>(3, "hello");
+	UC_FUNCTION(println)(uc::uc_add(""s, uc::uc_length_field(UC_VAR(args))));
+	UC_VAR(f) = uc::uc_construct<UC_REFERENCE(foo)>(3, "hello"s);
 	UC_FUNCTION(println)(uc::uc_length_field(UC_VAR(f)));
-	uc::uc_length_field(UC_VAR(f)) = "world";
+	uc::uc_length_field(UC_VAR(f)) = "world"s;
 	UC_FUNCTION(println)(uc::uc_length_field(UC_VAR(f)));
 }
 	UC_PRIMITIVE(void) UC_FUNCTION(bar)(UC_REFERENCE(foo) UC_VAR(f))
