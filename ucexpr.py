@@ -83,10 +83,8 @@ class StringNode(LiteralNode):
     """An AST node representing a string literal."""
 
     # add your code below
-    def gen_function_defs(self, ctx):
-        """Generate function definitions for this string node."""
-        escaped_value = self.text.replace('\\', '\\\\').replace('"', r'\"')
-        return f'"{escaped_value}"s'
+    # def gen_function_defs(self, ctx):
+        # return f'"{escaped_value}"s'
 
 @dataclass
 class BooleanNode(LiteralNode):
