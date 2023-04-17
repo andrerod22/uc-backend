@@ -64,13 +64,15 @@ class IfNode(StatementNode):
         ctx.indent = '\t'
         ctx.print(f'if ({self.test.gen_function_defs(ctx)}) ', indent=True)
         ctx.print('{', indent=True)
-        ctx.print(f'{self.then_block.gen_function_defs(ctx)}', indent=True)
+        if self.then_block.gen_function_defs(ctx):
+            ctx.print(f'{self.then_block.gen_function_defs(ctx)}', indent=True)
         ctx.print('}', indent=True)
 
         if self.else_block:
             ctx.print(f'else ', indent=True)
             ctx.print('{', indent=True)
-            ctx.print(f'{self.else_block.gen_function_defs(ctx)}', indent=True)
+            if self.else_block.gen_function_defs(ctx):
+                ctx.print(f'{self.else_block.gen_function_defs(ctx)}', indent=True)
             ctx.print('}', indent=True)
         # Check later (ASK Piazza)
         # super().gen_function_defs(ctx)
@@ -92,7 +94,8 @@ class WhileNode(StatementNode):
         ctx.indent = '\t'
         ctx.print(f'while ({self.test.gen_function_defs(ctx)}) ', indent=True)
         ctx.print('{', indent=True)
-        ctx.print(f'{self.body.gen_function_defs(ctx)}', indent=True)
+        if self.body.gen_function_defs(ctx):
+            ctx.print(f'{self.body.gen_function_defs(ctx)}', indent=True)
         ctx.print('}', indent=True)
         # Check later (ASK Piazza)
         # super().gen_function_defs(ctx)
@@ -129,7 +132,8 @@ class ForNode(StatementNode):
             ctx.print(f'{self.update.gen_function_defs(ctx)}', indent=True)
         ctx.print(') ', indent=True)
         ctx.print('{', indent=True)
-        ctx.print(f'{self.body.gen_function_defs(ctx)}', indent=True)
+        if self.body.gen_function_defs(ctx):
+            ctx.print(f'{self.body.gen_function_defs(ctx)}', indent=True)
         ctx.print('}', indent=True)
         # Check later (ASK Piazza)
         # super().gen_function_defs(ctx)
@@ -170,6 +174,8 @@ class ReturnNode(StatementNode):
             ctx.print(f'return {self.expr.gen_function_defs(ctx)};', indent=True)
         else:
             ctx.print('return;', indent=True)
+
+
 @dataclass
 class ExpressionStatementNode(StatementNode):
     """An AST node representing a statement of just an expression.

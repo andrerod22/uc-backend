@@ -75,6 +75,7 @@ class PhaseContext:
         provided. The trailing newline can be suppressed by end='',
         as with the standard print() function.
         """
+
         if 'indent' in kwargs:
             if kwargs['indent']:
                 print(self.indent, file=self.out, end='')

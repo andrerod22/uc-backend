@@ -580,7 +580,7 @@ class PushNode(BinaryOpNode):
     # add your code below
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'uc::uc_array_push({self.lhs.gen_function_defs(ctx)}, {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -592,5 +592,5 @@ class PopNode(BinaryOpNode):
     # add your code below
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions"""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'uc::uc_array_pop({self.lhs.gen_function_defs(ctx)}, {self.rhs.gen_function_defs(ctx)})'
 

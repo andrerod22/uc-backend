@@ -129,11 +129,9 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	if (UC_VAR(a) > UC_VAR(b)) 
 	{
 	return UC_VAR(a);
-	None
 	}
 	else 
 	{
-	None
 	}
 	return UC_VAR(b);
 }
@@ -149,21 +147,17 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	if (UC_VAR(dx) == 0 && UC_VAR(dy) == 0) 
 	{
 	return;
-	None
 	}
 	else 
 	{
-	None
 	}
 	UC_VAR(radius2) = UC_FUNCTION(max)(uc::uc_add(UC_VAR(dx) * UC_VAR(dx), UC_VAR(dy) * UC_VAR(dy)), UC_FUNCTION(min_radius_squared)());
 	if (UC_VAR(radius2) > UC_FUNCTION(cutoff_radius)() * UC_FUNCTION(cutoff_radius)()) 
 	{
 	return;
-	None
 	}
 	else 
 	{
-	None
 	}
 	UC_VAR(radius) = UC_FUNCTION(sqrt)(UC_VAR(radius2));
 	UC_VAR(coefficient) = 1 - UC_FUNCTION(cutoff_radius)() / UC_VAR(radius) / UC_VAR(radius2) / UC_FUNCTION(mass)();
@@ -181,30 +175,24 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	if (UC_VAR(p)->UC_VAR(x) < 0) 
 	{
 	UC_VAR(p)->UC_VAR(x) = -UC_VAR(p)->UC_VAR(x);
-	None
 	}
 	else 
 	{
 	UC_VAR(p)->UC_VAR(x) = 2 * UC_FUNCTION(box_size)() - UC_VAR(p)->UC_VAR(x);
-	None
 	}
 	UC_VAR(p)->UC_VAR(x_vel) = -UC_VAR(p)->UC_VAR(x_vel);
-	None
 	}
 	while (UC_VAR(p)->UC_VAR(y) < 0 || UC_VAR(p)->UC_VAR(y) > UC_FUNCTION(box_size)()) 
 	{
 	if (UC_VAR(p)->UC_VAR(y) < 0) 
 	{
 	UC_VAR(p)->UC_VAR(y) = -UC_VAR(p)->UC_VAR(y);
-	None
 	}
 	else 
 	{
 	UC_VAR(p)->UC_VAR(y) = 2 * UC_FUNCTION(box_size)() - UC_VAR(p)->UC_VAR(y);
-	None
 	}
 	UC_VAR(p)->UC_VAR(y_vel) = -UC_VAR(p)->UC_VAR(y_vel);
-	None
 	}
 }
 	UC_PRIMITIVE(void) UC_FUNCTION(print_particle_positions)(UC_ARRAY(UC_REFERENCE(particle)) UC_VAR(ps))
@@ -219,7 +207,6 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	) 
 	{
 	UC_FUNCTION(println)(uc::uc_add(uc::uc_add(uc::uc_add(uc::uc_add(uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(id), ": "), uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(x)), ", "), uc::uc_array_index(UC_VAR(ps), UC_VAR(i))->UC_VAR(y)));
-	None
 	}
 	UC_FUNCTION(println)("");
 }
@@ -244,8 +231,7 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	++UC_VAR(i)
 	) 
 	{
-	UC_VAR(particles) << uc::uc_construct<UC_REFERENCE(particle)>(uc::uc_array_index(UC_VAR(xs), UC_VAR(i)), uc::uc_array_index(UC_VAR(ys), UC_VAR(i)), uc::uc_array_index(UC_VAR(xvs), UC_VAR(i)), uc::uc_array_index(UC_VAR(yvs), UC_VAR(i)), 0, 0, UC_VAR(i));
-	None
+	uc::uc_array_push(UC_VAR(particles), uc::uc_construct<UC_REFERENCE(particle)>(uc::uc_array_index(UC_VAR(xs), UC_VAR(i)), uc::uc_array_index(UC_VAR(ys), UC_VAR(i)), uc::uc_array_index(UC_VAR(xvs), UC_VAR(i)), uc::uc_array_index(UC_VAR(yvs), UC_VAR(i)), 0, 0, UC_VAR(i)));
 	}
 	return UC_VAR(particles);
 }
@@ -287,9 +273,7 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	) 
 	{
 	UC_FUNCTION(apply_force)(uc::uc_array_index(UC_VAR(particles), UC_VAR(i)), uc::uc_array_index(UC_VAR(particles), UC_VAR(j)));
-	None
 	}
-	None
 	}
 	for (
 	UC_VAR(i) = 0
@@ -300,10 +284,8 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	) 
 	{
 	UC_FUNCTION(move_particle)(uc::uc_array_index(UC_VAR(particles), UC_VAR(i)));
-	None
 	}
 	UC_FUNCTION(print_particle_positions)(UC_VAR(particles));
-	None
 	}
 }
 	UC_PRIMITIVE(void) UC_FUNCTION(main)(UC_ARRAY(UC_PRIMITIVE(string)) UC_VAR(args))
@@ -311,12 +293,10 @@ UC_TYPEDEF(particle)(UC_PRIMITIVE(float) UC_VAR(x), UC_PRIMITIVE(float) UC_VAR(y
 	if (uc::uc_length_field(UC_VAR(args)) > 0) 
 	{
 	UC_FUNCTION(simulate)(UC_FUNCTION(string_to_int)(uc::uc_array_index(UC_VAR(args), 0)));
-	None
 	}
 	else 
 	{
 	UC_FUNCTION(simulate)(UC_FUNCTION(num_steps)());
-	None
 	}
 }
 
