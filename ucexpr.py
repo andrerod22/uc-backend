@@ -85,10 +85,11 @@ class StringNode(LiteralNode):
     # add your code below
     # def gen_function_defs(self, ctx):
         # return f'"{escaped_value}"s'
-    # add your code below
     def gen_function_defs(self, ctx):
         escaped_value = self.text[1:-1].replace('"', r'\"') # Escapes any extra double quotes
         return f'"{escaped_value}"s' # wraps the string in a std::string object via s
+    
+
 
 @dataclass
 class BooleanNode(LiteralNode):
@@ -274,7 +275,7 @@ class PrefixPlusNode(PrefixSignNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc prefix expressions"""
-        return f'{self.op_name}{self.expr.gen_function_defs(ctx)}'
+        return f'({self.op_name}{self.expr.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -286,7 +287,7 @@ class PrefixMinusNode(PrefixSignNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc prefix - expressions."""
-        return f'{self.op_name}{self.expr.gen_function_defs(ctx)}'
+        return f'({self.op_name}{self.expr.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -298,7 +299,7 @@ class NotNode(UnaryPrefixNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc prefix ! expressions."""
-        return f'{self.op_name}{self.expr.gen_function_defs(ctx)}'
+        return f'({self.op_name}{self.expr.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -317,7 +318,7 @@ class PrefixIncrNode(PrefixIncrDecrNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc prefix ++ expressions."""
-        return f'{self.op_name}{self.expr.gen_function_defs(ctx)}'
+        return f'({self.op_name}{self.expr.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -332,7 +333,7 @@ class PrefixDecrNode(PrefixIncrDecrNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc prefix -- expressions."""
-        return f'{self.op_name}{self.expr.gen_function_defs(ctx)}'
+        return f'({self.op_name}{self.expr.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -344,7 +345,7 @@ class IDNode(UnaryPrefixNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc prefix # expressions."""
-        return f'{self.op_name}{self.expr.gen_function_defs(ctx)}'
+        return f'({self.op_name}{self.expr.gen_function_defs(ctx)})'
 
 
 ######################
@@ -418,7 +419,7 @@ class MinusNode(BinaryArithNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -430,7 +431,7 @@ class TimesNode(BinaryArithNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -442,7 +443,7 @@ class DivideNode(BinaryArithNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -454,7 +455,7 @@ class ModuloNode(BinaryArithNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 # Logical operations
@@ -480,7 +481,7 @@ class LogicalAndNode(BinaryLogicNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions"""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 # Arithmetic comparisons
@@ -494,7 +495,7 @@ class LessNode(BinaryCompNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions"""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -509,7 +510,7 @@ class LessEqualNode(BinaryCompNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -521,7 +522,7 @@ class GreaterNode(BinaryCompNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions"""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -533,7 +534,7 @@ class GreaterEqualNode(BinaryCompNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 # Equality comparisons
@@ -547,7 +548,7 @@ class EqualNode(EqualityTestNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass
@@ -559,7 +560,7 @@ class NotEqualNode(EqualityTestNode):
     # add your code below if necessary
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 
 # Other binary operations
@@ -573,7 +574,7 @@ class AssignNode(BinaryOpNode):
     # add your code below
     def gen_function_defs(self, ctx):
         # breakpoint()
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'({self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)})'
 
 @dataclass
 class PushNode(BinaryOpNode):
@@ -584,7 +585,7 @@ class PushNode(BinaryOpNode):
     # add your code below
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'uc::uc_array_push({self.lhs.gen_function_defs(ctx)}, {self.rhs.gen_function_defs(ctx)})'
+        return f'(uc::uc_array_push({self.lhs.gen_function_defs(ctx)}, {self.rhs.gen_function_defs(ctx)}))'
 
 
 @dataclass
@@ -596,5 +597,5 @@ class PopNode(BinaryOpNode):
     # add your code below
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions"""
-        return f'uc::uc_array_pop({self.lhs.gen_function_defs(ctx)}, {self.rhs.gen_function_defs(ctx)})'
+        return f'(uc::uc_array_pop({self.lhs.gen_function_defs(ctx)}, {self.rhs.gen_function_defs(ctx)}))'
 
