@@ -80,8 +80,11 @@ struct UC_TYPEDEF(baz)
 
   // Full function definitions
 
-  UC_PRIMITIVE(void) UC_FUNCTION(main)(UC_ARRAY(UC_PRIMITIVE(string)) UC_VAR(args))(UC_REFERENCE(foo) UC_VAR(f), UC_REFERENCE(bar) UC_VAR(b), UC_REFERENCE(baz) UC_VAR(z))
+  UC_PRIMITIVE(void) UC_FUNCTION(main)(UC_ARRAY(UC_PRIMITIVE(string)) UC_VAR(args))
 {
+  UC_REFERENCE(foo) UC_VAR(f);
+  UC_REFERENCE(bar) UC_VAR(b);
+  UC_REFERENCE(baz) UC_VAR(z);
 	UC_VAR(f) = uc::uc_construct<UC_REFERENCE(foo)>();
 	UC_VAR(b) = uc::uc_construct<UC_REFERENCE(bar)>();
 	UC_VAR(z) = uc::uc_construct<UC_REFERENCE(baz)>();

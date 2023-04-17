@@ -594,19 +594,16 @@ class FunctionDeclNode(DeclNode):
             mangled_param_name = f'UC_VAR({param.name.raw})'
             mangled_params.append(f'{mangled_param_type} {mangled_param_name}')
 
-        mangled_vars = list()
-        for vardecl in self.vardecls:
-            vartype = vardecl.vartype.type.mangle()
-            varname = f'UC_VAR({vardecl.name.raw})'
-            mangled_vars.append(f'{vartype} {varname}')
-
         # Format the function definition:
-        func_def = f'{mangled_rettype} {mangled_func_name}({", ".join(mangled_params)})({", ".join(mangled_vars)})'
+        func_def = f'{mangled_rettype} {mangled_func_name}({", ".join(mangled_params)})'
 
         # Open function definition:
         ctx.print(func_def, indent=True)
         ctx.print('{', indent=False)
-        # ctx.indent = '\t'
+
+        # Declare local variables:
+        for vardecl in self.vardecls:
+            ctx.print(f'{vardecl.vartype.type.mangle()} UC_VAR({vardecl.name.raw});', indent=True)
 
         # Generate function body:
         self.body.gen_function_defs(ctx)
