@@ -20,10 +20,12 @@ class StatementNode(ASTNode):
     """The base class for all statement nodes."""
 
     # add your code below if necessary
-    def gen_function_defs(self, ctx):
-        """Default implementation for generating function definitions in statement nodes."""
+    # def gen_function_defs(self, ctx):
         # Check later (ASK Piazza)
-        super().gen_function_defs(ctx)
+        # breakpoint()
+        # self.expr
+        # ctx.print(';', indent=False)
+        # super().gen_function_defs(ctx)
 
 
 @dataclass
@@ -164,11 +166,10 @@ class ReturnNode(StatementNode):
     # add your code below
     def gen_function_defs(self, ctx):
         ctx.indent = '\t'
-        ctx.print('return ', indent=True)
         if self.expr:
-            ctx.print(f'{self.expr.gen_function_defs(ctx)}', indent=True)
-        ctx.print(';', indent=True)
-
+            ctx.print(f'return {self.expr.gen_function_defs(ctx)};', indent=True)
+        else:
+            ctx.print('return;', indent=True)
 @dataclass
 class ExpressionStatementNode(StatementNode):
     """An AST node representing a statement of just an expression.
@@ -182,5 +183,6 @@ class ExpressionStatementNode(StatementNode):
     def gen_function_defs(self, ctx):
         ctx.indent = '\t'
         if self.expr:
-            ctx.print(f'{self.expr.gen_function_defs(ctx)}', indent=True)
-            ctx.print(';', indent=True)
+            # breakpoint()
+            ctx.print(self.expr.gen_function_defs(ctx), indent=True, end='')
+            ctx.print(';', indent=False)

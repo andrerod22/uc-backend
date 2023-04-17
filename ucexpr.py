@@ -14,7 +14,7 @@ import ucbase
 from ucerror import error
 import ucfunctions
 import uctypes
-
+import pdb
 
 #############################
 # Base Node for Expressions #
@@ -61,7 +61,7 @@ class IntegerNode(LiteralNode):
     # add your code below
     def gen_function_defs(self, ctx):
         """Generate function definitions for the statements in this block."""
-        ctx.print(f'{self.text}', indent=False, end='')
+        return f'{self.text}'
 
 
 @dataclass
@@ -92,6 +92,9 @@ class NullNode(LiteralNode):
     text: str = 'nullptr'
 
     # add your code below
+    def gen_function_defs(self, ctx):
+        """Generate function definitions for the statements in this block."""
+        return f'{self.text}'
 
 
 ###################
@@ -108,6 +111,10 @@ class NameExpressionNode(ExpressionNode):
     name: ucbase.NameNode
 
     # add your code below
+    def gen_function_defs(self, ctx):
+        """Generate function definitions for the statements in this block."""
+        return f'UC_VAR({self.name.raw})'
+
 
 
 #######################
@@ -128,7 +135,20 @@ class CallNode(ExpressionNode):
     func: Optional[ucfunctions.Function] = attribute()
 
     # add your code below
+    def gen_function_defs(self, ctx):
+        """Generate function definitions for the statements in this block."""
+        # Generate the mangled function name using the UC_FUNCTION macro
+        mangled_function_name = f'UC_FUNCTION({self.name.raw})'
 
+        # Generate the C++ code representations for the arguments
+        # breakpoint()
+        arg_codes = [arg.gen_function_defs(ctx) for arg in self.args]
+
+        # Combine the arguments with commas
+        arg_str = ', '.join(arg_codes)
+
+        # Generate the C++ code for the function call
+        return f'{mangled_function_name}({arg_str})'
 
 @dataclass
 class NewNode(ExpressionNode):
@@ -149,8 +169,23 @@ class NewNode(ExpressionNode):
         self.typename.resolve_types(ctx)
         self.type = self.typename.type
         super().resolve_types(ctx)
+    
     # add your code below
+    def gen_function_defs(self, ctx):
+        """Generate function definitions for the statements in this new expression."""
+        
+        # Generate mangled name for the type:
+        mangled_type_name = self.typename.type.mangle()
+        
+        # Generate the constructor args:
 
+        arg_list = [arg.gen_function_defs(ctx) for arg in self.args]
+        
+        # Combine args with comma:
+        arg_str = ', '.join(arg_list)
+        
+        # Generate the new expression:
+        return f'uc::uc_construct<{mangled_type_name}>({arg_str})'
 
 @dataclass
 class FieldAccessNode(ExpressionNode):
@@ -164,7 +199,13 @@ class FieldAccessNode(ExpressionNode):
     receiver: ExpressionNode
     field: ucbase.NameNode
 
-    # add your code below
+    def gen_function_defs(self, ctx):
+        """Generate function definitions for the statements in this block."""
+        # add your code below
+        receiver_code = self.receiver.gen_function_defs(ctx)
+        field_name = self.field.raw
+        return f'{receiver_code}->UC_VAR({field_name})'
+
 
 
 @dataclass
@@ -311,14 +352,16 @@ class BinaryCompNode(BinaryOpNode):
 
     # add your code below if necessary
     def gen_function_defs(self, ctx):
-        ctx.print(
-        f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}', indent=False, end='')
+        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
 
 @dataclass
 class EqualityTestNode(BinaryOpNode):
     """A base AST node representing an equality comparison."""
 
     # add your code below if necessary
+    def gen_function_defs(self, ctx):
+        """Generates macros for uc equality expressions"""
+        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
 
 
 # Arithmetic operations
@@ -459,7 +502,8 @@ class AssignNode(BinaryOpNode):
 
     # add your code below
     def gen_function_defs(self, ctx):
-        ctx.print(f'{self.left.gen_function_defs(ctx)} {self.op_name} {self.right.gen_function_defs(ctx)}', indent=True)
+        # breakpoint()
+        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
 
 @dataclass
 class PushNode(BinaryOpNode):

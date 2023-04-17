@@ -427,6 +427,7 @@ class VarDeclNode(ASTNode):
     # add your code below if necessary
 
 
+
 @dataclass
 class ParameterNode(ASTNode):
     """An AST node representing a parameter declaration.
@@ -580,6 +581,39 @@ class FunctionDeclNode(DeclNode):
 
         # Recursive call:
         super().gen_function_decls(ctx)
+
+    def gen_function_defs(self, ctx):
+        """Generate the function definition for this function."""
+        # Mangle the function name, return type, and parameter types:
+        # breakpoint()
+        mangled_func_name = self.func.mangle()
+        mangled_rettype = self.rettype.type.mangle()
+        mangled_params = list()
+        for param in self.parameters:
+            mangled_param_type = param.vartype.type.mangle()
+            mangled_param_name = f'UC_VAR({param.name.raw})'
+            mangled_params.append(f'{mangled_param_type} {mangled_param_name}')
+
+        mangled_vars = list()
+        for vardecl in self.vardecls:
+            vartype = vardecl.vartype.type.mangle()
+            varname = f'UC_VAR({vardecl.name.raw})'
+            mangled_vars.append(f'{vartype} {varname}')
+
+        # Format the function definition:
+        func_def = f'{mangled_rettype} {mangled_func_name}({", ".join(mangled_params)})({", ".join(mangled_vars)})'
+
+        # Open function definition:
+        ctx.print(func_def, indent=True)
+        ctx.print('{', indent=False)
+        # ctx.indent = '\t'
+
+        # Generate function body:
+        self.body.gen_function_defs(ctx)
+
+        # Close function definition:
+        ctx.print('}', indent=False)
+
 
 
 ######################
