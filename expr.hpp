@@ -35,8 +35,8 @@ namespace uc {
   // Template for accessing the length field of an array
   // object.  
   template <class T>
-  int uc_length_field(uc_reference<vector<T>> ref) {
-    return ref->size();
+  int uc_length_field(UC_ARRAY(T) ref) {
+    return uc_array_length(ref);
   } 
 
   // define your overloads for uc_add() here
@@ -67,6 +67,14 @@ namespace uc {
 
 
   // numeric types
+  template <class A, class B>
+  auto uc_add(A a, B b) -> decltype(a + b) {
+    return a + b;
+  }
+
+  /*
+  // other cases 
+    // string boolean , boolean string
   template <class B>
   auto uc_add(int a, B b) -> decltype(a + b) {
     return a + b;
@@ -80,7 +88,7 @@ namespace uc {
   template <class B>
   auto uc_add(long a, B b) -> decltype(a + b) {
     return a + b;
-  }
+  } */
 
 } // namespace uc
 
