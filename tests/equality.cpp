@@ -60,7 +60,7 @@ struct UC_TYPEDEF(bar)
   UC_PRIMITIVE(int) UC_VAR(i);
   UC_PRIMITIVE(float) UC_VAR(f);
 	UC_VAR(i) = 3;
-	UC_VAR(f) = None;
+	UC_VAR(f) = 4.0;
 	UC_FUNCTION(println)(UC_FUNCTION(boolean_to_string)(UC_VAR(i) == UC_VAR(i)));
 	UC_FUNCTION(println)(UC_FUNCTION(boolean_to_string)(UC_VAR(f) != UC_VAR(f)));
 	UC_FUNCTION(println)(UC_FUNCTION(boolean_to_string)(UC_VAR(i) == UC_VAR(f)));
