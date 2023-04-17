@@ -212,7 +212,10 @@ class FieldAccessNode(ExpressionNode):
         # add your code below
         receiver_code = self.receiver.gen_function_defs(ctx)
         field_name = self.field.raw
-        return f'{receiver_code}->UC_VAR({field_name})'
+        if field_name == "length":
+            return f'uc::uc_length_field({receiver_code})'
+        else:
+            return f'{receiver_code}->UC_VAR({field_name})'
 
 
 
@@ -399,7 +402,7 @@ class PlusNode(BinaryArithNode):
     # add your code below
     def gen_function_defs(self, ctx):
         """Generates macros for uc binary op expressions."""
-        return f'{self.lhs.gen_function_defs(ctx)} {self.op_name} {self.rhs.gen_function_defs(ctx)}'
+        return f'uc::uc_add({self.lhs.gen_function_defs(ctx)}, {self.rhs.gen_function_defs(ctx)})'
 
 
 @dataclass

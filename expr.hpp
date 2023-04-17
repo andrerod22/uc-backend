@@ -24,6 +24,7 @@ namespace uc {
 
   // Basic template for accessing the length field of a non-array
   // object.
+
   template<class T>
   auto uc_length_field(T ref) -> decltype(ref->UC_VAR(length)) & {
     return ref->UC_VAR(length);
@@ -31,7 +32,55 @@ namespace uc {
 
   // add your overloads here
 
+  // Template for accessing the length field of an array
+  // object.  
+  template <class T>
+  int uc_length_field(uc_reference<vector<T>> ref) {
+    return ref->size();
+  } 
+
   // define your overloads for uc_add() here
+
+  // string types
+
+  std::string uc_add(std::string str, std::string str2) {
+    return str + str2;
+  }
+
+  template <class T>
+  auto uc_add(std::string str, T t) -> decltype(std::to_string(t)) {
+    std::string t_string = std::to_string(t);
+    if (*typeid(t).name() == 'b') {
+      t_string = (t) ? "true" : "false";
+    }
+    return str + t_string;
+  }
+
+  template <class T>
+  auto uc_add(T t, std::string str) -> decltype(std::to_string(t)) {
+    std::string t_string = std::to_string(t);
+    if (*typeid(t).name() == 'b') {
+      t_string = (t) ? "true" : "false";
+    }
+    return t_string + str;
+  }
+
+
+  // numeric types
+  template <class B>
+  auto uc_add(int a, B b) -> decltype(a + b) {
+    return a + b;
+  }
+
+  template <class B>
+  auto uc_add(double a, B b) -> decltype(a + b) {
+    return a + b;
+  }
+
+  template <class B>
+  auto uc_add(long a, B b) -> decltype(a + b) {
+    return a + b;
+  }
 
 } // namespace uc
 
