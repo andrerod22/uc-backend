@@ -158,7 +158,7 @@ class VarEnv:
         self.__global_env = global_env
         self.__var_types = {}
 
-    def add_variable(self, phase, position, name, var_type, kind_str):
+    def add_variable(self, name, var_type):
         """Insert a variable into this environment.
 
         phase is the current compiler phase, position is the source
@@ -170,8 +170,7 @@ class VarEnv:
         in this environment.
         """
         if name in self.__var_types:
-            error(phase, position,
-                  f'redeclaration of {kind_str} {name}')
+            print("ERROR")
         else:
             self.__var_types[name] = var_type
 
@@ -306,11 +305,11 @@ class ASTNode:
     ######################
 
     def gen_type_decls(self, ctx):
-        """Generate forward type declarations for the types in this AST node."""
+        """Generate forward type declarations for types in this AST node."""
         ast_map(lambda n: n.gen_type_decls(ctx), self.children)
 
     def gen_function_decls(self, ctx):
-        """Generate forward function declarations for the functions in this AST node."""
+        """Generate forward function dec for the func in this AST node."""
         ast_map(lambda n: n.gen_function_decls(ctx), self.children)
 
     def gen_type_defs(self, ctx):
@@ -374,13 +373,12 @@ class TypeNameNode(BaseTypeNameNode):
 
     name: NameNode
 
-    #todo: make unique
     def resolve_types(self, ctx):
         """Resolve types for TypeNameNode."""
         ctx_copy = ctx.clone()
         ctx_copy['is_return'] = False
-        self.type = ctx.global_env.lookup_type(ctx.phase, 
-                                               self.position, 
+        self.type = ctx.global_env.lookup_type(ctx.phase,
+                                               self.position,
                                                self.name.raw)
         super().resolve_types(ctx)
 
@@ -397,17 +395,16 @@ class ArrayTypeNameNode(BaseTypeNameNode):
     elem_type: BaseTypeNameNode
 
     # add your code below if necessary
-    #todo: make unique
+
     def resolve_types(self, ctx):
         """Resolve types for ArrayTypeNameNode."""
-
-        new_ctx = ctx.clone() 
+        new_ctx = ctx.clone()
         new_ctx['is_return'] = False
         self.elem_type.resolve_types(ctx)
         self.type = self.elem_type.type.array_type
-        for ch in self.children:
-            ch.resolve_types(new_ctx)
-            cu_el_type = ch.type
+        for child in self.children:
+            child.resolve_types(new_ctx)
+            cu_el_type = child.type
             if cu_el_type != self.elem_type.type:
                 error(ctx.phase, self.position, "Incorrect array elem type")
         super().resolve_types(ctx)
@@ -425,7 +422,6 @@ class VarDeclNode(ASTNode):
     name: NameNode
 
     # add your code below if necessary
-
 
 
 @dataclass
@@ -464,16 +460,21 @@ class StructDeclNode(DeclNode):
 
     def gen_type_decls(self, ctx):
         """Generate the forward declaration for this user-defined type."""
-        # Is this a style violation? We know this is a user-defined type (ASK OH)
         ctx.print(f"struct UC_TYPEDEF({self.name.raw});", indent=True)
         super().gen_type_decls(ctx)
 
     def gen_type_defs(self, ctx):
         """Generate the full type definition for this user-defined type."""
         typedef = f"UC_TYPEDEF({self.name.raw})"
-        typevars = [f"{vardecl.vartype.type.mangle()} UC_VAR({vardecl.name.raw})" for vardecl in self.vardecls]
-        init_list = ', '.join([f'UC_VAR({vardecl.name.raw})(UC_VAR({vardecl.name.raw}))' for vardecl in self.vardecls])
-        comparisons = [f'this->UC_VAR({vardecl.name.raw}) == rhs.UC_VAR({vardecl.name.raw})' for vardecl in self.vardecls]
+        typevars = [f"{vardecl.vartype.type.mangle()} " +
+                    f"UC_VAR({vardecl.name.raw})"
+                    for vardecl in self.vardecls]
+        init_list = ', '.join([f'UC_VAR({vardecl.name.raw})'
+                               f'(UC_VAR({vardecl.name.raw}))'
+                               for vardecl in self.vardecls])
+        comparisons = [f'this->UC_VAR({vardecl.name.raw})'
+                       f'== rhs.UC_VAR({vardecl.name.raw})'
+                       for vardecl in self.vardecls]
 
         # Open struct definition:
         ctx.print(f'struct {typedef} ')
@@ -483,11 +484,11 @@ class StructDeclNode(DeclNode):
         # Member Variables:
         for typevar in typevars:
             ctx.print(f'{typevar};', indent=True)
-            ctx.print(f'\n', indent=True)
+            ctx.print('\n', indent=True)
 
         # Default Constructor:
         ctx.print(f'{typedef}() = default;', indent=True)
-        ctx.print(f'\n', indent=True)
+        ctx.print('\n', indent=True)
 
         # Custom Constructor:
         if len(typevars) > 0:
@@ -496,22 +497,23 @@ class StructDeclNode(DeclNode):
         # Equality Operator:
         ctx.print(f'bool operator==(const {typedef} &rhs) const', indent=True)
         ctx.print('{', indent=True)
-        if len(typevars) > 0:  
+        if len(typevars) > 0:
             ctx.print(f'return {" && ".join(comparisons)};', indent=True)
         else:
-            ctx.print(f'return true;', indent=True) 
+            ctx.print('return true;', indent=True)
         ctx.print('}', indent=True)
 
         # Inequality Operator:
         ctx.print(f'bool operator!=(const {typedef} &rhs) const', indent=True)
         ctx.print('{', indent=True)
-        ctx.print(f'return !((*this)==(rhs));', indent=True)   
+        ctx.print('return !((*this)==(rhs));', indent=True)
         ctx.print('}', indent=True)
-        
+
         # Close struct definition:
         ctx.print('};', indent=False)
         # Recursive call:
         super().gen_type_defs(ctx)
+
 
 @dataclass
 class FunctionDeclNode(DeclNode):
@@ -544,7 +546,6 @@ class FunctionDeclNode(DeclNode):
                                                 self)
         super().find_decls(ctx)
 
-    #todo: make unique 
     def resolve_types(self, ctx):
         """Resolve types of FunctionDeclNode."""
         new_ctx = ctx.clone()
@@ -567,14 +568,16 @@ class FunctionDeclNode(DeclNode):
         # Mangle the function name, return type, and parameter types:
         mangled_func_name = self.func.mangle()
         mangled_rettype = self.rettype.type.mangle()
-        mangled_params = list()
+        mangled_params = []
         for param in self.parameters:
             mangled_param_type = param.vartype.type.mangle()
             mangled_param_name = f'UC_VAR({param.name.raw})'
             mangled_params.append(f'{mangled_param_type} {mangled_param_name}')
-        
+
         # Format the function declaration:
-        func_decl = f'{mangled_rettype} {mangled_func_name}({", ".join(mangled_params)});'
+        func_decl = f'{mangled_rettype}'
+        func_decl2 = f'{mangled_func_name}({", ".join(mangled_params)});'
+        func_decl = func_decl + func_decl2
 
         # Forward declaration:
         ctx.print(func_decl, indent=True)
@@ -588,14 +591,16 @@ class FunctionDeclNode(DeclNode):
         # breakpoint()
         mangled_func_name = self.func.mangle()
         mangled_rettype = self.rettype.type.mangle()
-        mangled_params = list()
+        mangled_params = []
         for param in self.parameters:
             mangled_param_type = param.vartype.type.mangle()
             mangled_param_name = f'UC_VAR({param.name.raw})'
             mangled_params.append(f'{mangled_param_type} {mangled_param_name}')
 
         # Format the function definition:
-        func_def = f'{mangled_rettype} {mangled_func_name}({", ".join(mangled_params)})'
+        func_def = f'{mangled_rettype} {mangled_func_name}'
+        func_def2 = f'({", ".join(mangled_params)})'
+        func_def = func_def + func_def2
 
         # Open function definition:
         ctx.print(func_def, indent=True)
@@ -603,7 +608,8 @@ class FunctionDeclNode(DeclNode):
 
         # Declare local variables:
         for vardecl in self.vardecls:
-            ctx.print(f'{vardecl.vartype.type.mangle()} UC_VAR({vardecl.name.raw});', indent=True)
+            ctx.print(f'{vardecl.vartype.type.mangle()}' +
+                      f'UC_VAR({vardecl.name.raw});', indent=True)
 
         # Generate function body:
         self.body.gen_function_defs(ctx)
@@ -612,11 +618,9 @@ class FunctionDeclNode(DeclNode):
         ctx.print('}', indent=False)
 
 
-
 ######################
 # Printing Functions #
 ######################
-
 def child_str(child):
     """Convert an AST item into a string.
 

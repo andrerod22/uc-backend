@@ -7,9 +7,6 @@ as well as utility functions that operate on functions.
 Project UID c49e54971d13f14fbc634d7a0fe4b38d421279e7
 """
 
-from ucerror import error
-import uctypes
-
 
 class Function:
     """A class that represents a uC function."""
@@ -50,7 +47,8 @@ class Function:
         """
         return f'UC_FUNCTION({self.name})'
 
-    def check_args(self, phase, position, args):
+    @staticmethod
+    def check_args():
         """Check if the arguments are compatible with this function.
 
         The given arguments are compared with the parameter types of

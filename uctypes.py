@@ -78,7 +78,8 @@ class ArrayType(Type):
         """
         return f'UC_ARRAY({self.elem_type.mangle()})'
 
-    def check_args(self, phase, position, args):
+    @staticmethod
+    def check_args():
         """Check if the arguments are compatible with this array type.
 
         Compares the arguments against the element type of this array.
@@ -127,7 +128,8 @@ class UserType(Type):
         self.decl = decl
         self.fields = decl.vardecls
 
-    def check_args(self, phase, position, args):
+    @staticmethod
+    def check_args():
         """Check if the arguments are compatible with the field types.
 
         Compares the arguments against the types of the fields this
